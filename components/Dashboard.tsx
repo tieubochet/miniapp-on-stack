@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid } from 'recharts';
-import { Activity, Github, Code, Coins } from 'lucide-react';
+import { Activity, Github, Code, CheckCircle2 } from 'lucide-react';
 import { MOCK_ACTIVITY_DATA } from '../constants';
 
 export const Dashboard: React.FC = () => {
@@ -13,27 +13,34 @@ export const Dashboard: React.FC = () => {
           <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
             <Code className="h-6 w-6" />
           </div>
-          <h2 className="text-xl font-semibold text-white">SDK Integration</h2>
+          <h2 className="text-xl font-semibold text-white">SDK Integration Status</h2>
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                <div className="text-sm text-slate-400 mb-1">Reown AppKit</div>
-                <div className="text-green-400 font-medium flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-green-500"></span> Active
+        <div className="space-y-4">
+            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
+                <div>
+                    <div className="text-white font-medium">Reown AppKit</div>
+                    <div className="text-xs text-slate-400">Analytics & Core Initialized</div>
+                </div>
+                <div className="text-green-400 font-medium flex items-center gap-2 bg-green-500/10 px-3 py-1 rounded-full text-xs border border-green-500/20">
+                    <CheckCircle2 className="h-3 w-3" /> Active
                 </div>
             </div>
-            <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
-                <div className="text-sm text-slate-400 mb-1">WalletKit SDK</div>
-                <div className="text-green-400 font-medium flex items-center gap-2">
-                     <span className="h-2 w-2 rounded-full bg-green-500"></span> Detected
+            
+             <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
+                <div>
+                    <div className="text-white font-medium">Stacks Connect</div>
+                    <div className="text-xs text-slate-400">Transaction Signing</div>
+                </div>
+                <div className="text-green-400 font-medium flex items-center gap-2 bg-green-500/10 px-3 py-1 rounded-full text-xs border border-green-500/20">
+                    <CheckCircle2 className="h-3 w-3" /> Active
                 </div>
             </div>
         </div>
         
         <div className="mt-6 pt-6 border-t border-slate-700">
             <h3 className="text-sm font-medium text-slate-300 mb-4">Smart Contract Fees (STX)</h3>
-             <div className="h-48 w-full">
+             <div className="h-40 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={MOCK_ACTIVITY_DATA}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#334155" />

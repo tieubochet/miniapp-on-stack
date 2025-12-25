@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "@reown/appkit": "^1.6.0",
-    "@reown/appkit-adapter-stacks": "^1.6.0",
+    "@reown/appkit-adapter-ethers": "^1.6.0",
     "@stacks/connect": "^7.7.0",
     "@stacks/network": "^6.13.0",
+    "ethers": "^6.13.2",
     "lucide-react": "^0.454.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
