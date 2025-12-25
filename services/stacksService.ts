@@ -1,78 +1,46 @@
-import { createAppKit } from '@reown/appkit/react';
-import { StacksAdapter } from '@reown/appkit-adapter-stacks';
-import { openContractCall } from '@stacks/connect';
+import { AppConfig, UserSession, showConnect, openContractCall } from '@stacks/connect';
+import { STACKS_MAINNET } from '@stacks/network';
 import { APP_CONFIG } from '../constants';
 
-// 1. Get projectId
-const projectId = APP_CONFIG.projectId;
+// 1. Setup UserSession
+const appConfig = new AppConfig(['store_write', 'publish_data']);
+export const userSession = new UserSession({ appConfig });
 
-// 2. Set up Stacks Adapter
-const stacksAdapter = new StacksAdapter({
-  projectId,
-  networks: [
-    {
-      id: 'mainnet',
-      name: 'Stacks Mainnet',
-      network: 'mainnet',
-      rpcUrl: 'https://stacks-node-api.mainnet.stacks.co',
-      currency: 'STX',
-      explorerUrl: 'https://explorer.hiro.so',
-    }
-  ]
-});
-
-// 3. Create AppKit instance with Error Handling
-let appKitInstance;
-try {
-  appKitInstance = createAppKit({
-    adapters: [stacksAdapter],
-    networks: [stacksAdapter.networks[0]],
-    projectId,
-    metadata: {
+// 2. Authentication Helper
+export const authenticate = () => {
+  showConnect({
+    appDetails: {
       name: APP_CONFIG.appName,
-      description: 'Stacks Builder Challenge App',
-      url: window.location.origin,
-      icons: [APP_CONFIG.appIcon]
+      icon: APP_CONFIG.appIcon,
     },
-    features: {
-      analytics: true,
-      email: false, // Disable email to reduce complexity in CDN mode
-      socials: []   // Disable socials to reduce complexity in CDN mode
-    }
+    redirectTo: '/',
+    onFinish: () => {
+      window.location.reload();
+    },
+    userSession,
   });
-} catch (error) {
-  console.error("Failed to initialize Reown AppKit:", error);
-}
+};
 
-export const appKit = appKitInstance;
+export const logout = () => {
+  userSession.signUserOut("/");
+  window.location.reload();
+};
 
-// Helper to get current address safely
-export const getStxAddress = () => {
-  if (!appKit) return null;
-  
-  try {
-    const state = appKit.getIsConnectedState();
-    if (state) {
-       return appKit.getAddress();
-    }
-  } catch (e) {
-    console.warn("Error getting address from AppKit:", e);
+export const getStxAddress = (): string | null => {
+  if (userSession.isUserSignedIn()) {
+    return userSession.loadUserData().profile.stxAddress.mainnet;
   }
   return null;
 };
 
-export const logout = () => {
-  if (appKit) appKit.disconnect();
-};
-
+// 3. Contract Interaction
 export const checkInTransaction = async (onFinish: (data: any) => void) => {
-  // We use openContractCall for the actual interaction
-  // This works alongside AppKit because AppKit handles the wallet connection session
   await openContractCall({
     contractAddress: APP_CONFIG.contractAddress,
     contractName: APP_CONFIG.contractName,
     functionName: 'check-in',
     functionArgs: [], 
+    network: STACKS_MAINNET,
     appDetails: {
         name: APP_CONFIG.appName,
         icon: APP_CONFIG.appIcon,
@@ -81,6 +49,7 @@ export const checkInTransaction = async (onFinish: (data: any) => void) => {
   });
 };
 
+// 4. Mock Data Fetchers
 export const fetchUserStats = async (address: string) => {
     // Simulate network delay
     await new Promise(r => setTimeout(r, 800)); 

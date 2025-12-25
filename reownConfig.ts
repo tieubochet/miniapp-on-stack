@@ -7,15 +7,15 @@ import { APP_CONFIG } from './constants'
 const projectId = APP_CONFIG.projectId
 
 // 2. Set chains
-// Note: We are using mainnet to initialize the SDK. 
-// Stacks interactions are handled separately via @stacks/connect until the Stacks Adapter is public.
+// We use mainnet to initialize the SDK so it boots up correctly.
+// Actual Stacks logic is handled by @stacks/connect in stacksService.ts
 const networks = [mainnet] as any
 
 // 3. Create a metadata object
 const metadata = {
   name: APP_CONFIG.appName,
   description: 'Mini App on Stack',
-  url: 'https://miniapp-on-stack.vercel.app', // Update this to your deployed domain
+  url: 'https://miniapp-on-stack.vercel.app', 
   icons: [APP_CONFIG.appIcon]
 }
 
@@ -27,6 +27,6 @@ export const appKit = createAppKit({
   metadata,
   projectId,
   features: {
-    analytics: true // Crucial for tracking usage
+    analytics: true 
   }
 })
